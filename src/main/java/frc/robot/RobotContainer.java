@@ -9,7 +9,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 
-import frc.robot.subsystems.CANFuelSubsystem;
+import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.armSubsystem;
 
@@ -23,7 +23,6 @@ import frc.robot.commands.pause;
 import frc.robot.commands.SpinUp;
 
 import frc.robot.autos.ExampleAuto;
-
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -63,7 +62,7 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final CANFuelSubsystem fuelSubsystem = new CANFuelSubsystem();
+  private final FuelSubsystem fuelSubsystem = new FuelSubsystem();
   public static final armSubsystem m_armSubsystem = new armSubsystem(); //arm subsystem
 
 
@@ -117,6 +116,7 @@ public class RobotContainer {
 
 // WILL BE FOR THE ARM @TODO 
   //Left Trigger -> arm moves up
+  //idy is isdoneyet
   m_driverController.leftTrigger(OIConstants.kTriggerButtonThreshold)
   .whileTrue(new extendArmToBar(m_armSubsystem, 5, 0.5, false));
 
@@ -137,7 +137,7 @@ public class RobotContainer {
         .onTrue(new LaunchSequence(fuelSubsystem));;
 
     // Start Button -> Zero swerve heading
-   // m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
+    m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
    // Create a POV trigger for your controller
     //povTrigger = new Trigger(() -> m_driverController.getPOV() != -1);
     //new POVMotorCommand(m_armSubsystem, m_driverController, povTrigger);

@@ -7,14 +7,14 @@ package frc.robot.autos;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.Launch;
-import frc.robot.subsystems.CANFuelSubsystem;
+import frc.robot.subsystems.FuelSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ExampleAuto extends SequentialCommandGroup {
   /** Creates a new ExampleAuto. */
-  public ExampleAuto(DriveSubsystem driveSubsystem1, CANFuelSubsystem ballSubsystem) {
+  public ExampleAuto(DriveSubsystem driveSubsystem1, FuelSubsystem ballSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(

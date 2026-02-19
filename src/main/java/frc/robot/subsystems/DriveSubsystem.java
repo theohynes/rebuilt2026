@@ -118,7 +118,10 @@ private Field2d _field = new Field2d();
         },
         pose);
   }
-
+  /** Zeroes the heading of the robot. */
+  public Command zeroHeadingCommand() {
+    return this.runOnce(() -> m_gyro.reset());
+  }
   /**
    * Method to drive the robot using joystick info.
    *
