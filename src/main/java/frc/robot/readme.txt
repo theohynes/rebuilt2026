@@ -5,6 +5,7 @@ Welcome to the first version of the code for Rebuilt
 -Arm is not ready yet so when it actually is:
 -->Change armSubsystem from TXT to JAVA 
 -->Change POVArmMotorCommand from TXT to JAVA
+-->Change ExtendArmToBar from TXT to JAVA
 -->RobotContainer 
      22 //@TODO: create arm subsystem and import it here
      23 //import frc.robot.subsystems.armSubsystem;
