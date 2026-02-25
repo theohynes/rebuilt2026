@@ -11,16 +11,18 @@ import frc.robot.Constants.OIConstants;
 
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.armSubsystem;
 
+import frc.robot.commands.pause;
+import frc.robot.commands.SpinUp;
 import frc.robot.commands.Eject;
-import frc.robot.commands.extendArmToBar;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchSequence;
-import frc.robot.commands.POVArmMotorCommand;
-import frc.robot.commands.pause;
-import frc.robot.commands.SpinUp;
+
+//@TODO: create arm subsystem and import it here
+//import frc.robot.subsystems.armSubsystem;
+//import frc.robot.commands.POVArmMotorCommand;
+//import frc.robot.commands.extendArmToBar;
 
 import frc.robot.autos.ExampleAuto;
 
@@ -32,7 +34,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Commands;
-
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -63,7 +64,9 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final FuelSubsystem fuelSubsystem = new FuelSubsystem();
-  public static final armSubsystem m_armSubsystem = new armSubsystem(); //arm subsystem
+
+  //@TODO: create arm subsystem and import it here
+  //public static final armSubsystem m_armSubsystem = new armSubsystem(); //arm subsystem
 
 
   // The driver's controller
@@ -74,7 +77,9 @@ public class RobotContainer {
     private Trigger povTrigger;
 
     // create instance of POVMotorCommand as a class-level variable
-    private POVArmMotorCommand povMotorCommand;
+   
+   //@TODO Will be for the arm, not sure if we need it yet
+    //private POVArmMotorCommand povMotorCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -117,9 +122,10 @@ public class RobotContainer {
 // WILL BE FOR THE ARM @TODO 
   //Left Trigger -> arm moves up
   //idy is isdoneyet
+  /** 
   m_driverController.leftTrigger(OIConstants.kTriggerButtonThreshold)
   .whileTrue(new extendArmToBar(m_armSubsystem, 5, 0.5, false));
-
+**/
 
     // While the left bumper on operator controller is held, intake Fuel
   m_driverController.leftBumper().whileTrue(new Intake(fuelSubsystem));

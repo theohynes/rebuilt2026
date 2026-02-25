@@ -136,7 +136,7 @@ public final class Constants {
   }
 
       // Arm options
-    public static final boolean ARM_MOTOR_INVERTED = false;
-        public static final int ARM_MOTOR_CAN_ID = 31;
+      public static final boolean ARM_MOTOR_INVERTED = false;
+        //public static final int ARM_MOTOR_CAN_ID = 31;
 
 }
