@@ -135,8 +135,9 @@ public final class Constants {
     public static final double ROTATION_SCALING = .8;
   }
 
+      //@TODO: create arm subsystem and add constants here
       // Arm options
-      public static final boolean ARM_MOTOR_INVERTED = false;
-        //public static final int ARM_MOTOR_CAN_ID = 31;
+      //public static final boolean ARM_MOTOR_INVERTED = false;
+      //public static final int ARM_MOTOR_CAN_ID = 31;
 
 }
