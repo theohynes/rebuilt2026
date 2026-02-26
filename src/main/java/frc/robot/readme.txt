@@ -1,6 +1,12 @@
 # rebuilt2026_v1_2_18_26
 Welcome to the first version of the code for Rebuilt
 
+2/25/2026- Mez Kaleb
+All Four Swerves need tweaks for the turning mechanism
+FrontLeft and FrontRight need the adaptor spacers for the encoder to motor
+Gyro and PDH have same CAN ID which confuses roborio (gyro rn set to 0)
+
+
 2/25/2026-TJ
 -Arm is not ready yet so when it actually is:
 -->Change armSubsystem from TXT to JAVA 
