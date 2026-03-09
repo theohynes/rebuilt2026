@@ -7,24 +7,26 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FuelConstants;
 import frc.robot.Constants.OIConstants;
 
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-
+/** 
 import frc.robot.commands.pause;
 import frc.robot.commands.SpinUp;
 import frc.robot.commands.Eject;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchSequence;
+**/
 
 //@TODO: create arm subsystem and import it here
 //import frc.robot.subsystems.armSubsystem;
 //import frc.robot.commands.POVArmMotorCommand;
 //import frc.robot.commands.extendArmToBar;
 
-import frc.robot.autos.ExampleAuto;
+//import frc.robot.autos.ExampleAuto;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -50,6 +52,27 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 
 import java.util.List;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FuelConstants;
+import frc.robot.Constants.OIConstants;
 
 
 
@@ -63,15 +86,14 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final FuelSubsystem fuelSubsystem = new FuelSubsystem();
+  private final FuelSubsystem ballSubsystem = new FuelSubsystem();
 
   //@TODO: create arm subsystem and import it here
   //public static final armSubsystem m_armSubsystem = new armSubsystem(); //arm subsystem
 
 
   // The driver's controller
-   public static CommandXboxController m_driverController =
-      new CommandXboxController(OIConstants.kDriverControllerPort);
+   CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
 
         // Create a POV trigger for your controller
     private Trigger povTrigger;
@@ -113,12 +135,18 @@ public class RobotContainer {
    * passing it to a
    * {@link JoystickButton}.
    */
-  private void configureButtonBindings() {
+    private void configureButtonBindings() {
+   /** new Button(m_driverController, Button.kR1.value)
+        .whileTrue(new RunCommand(
+            () -> m_robotDrive.setXCommand(),
+            m_robotDrive));
 
-
- // Left Stick Button -> Set swerve to X
-    m_driverController.leftStick().onTrue(m_robotDrive.setXCommand());
-
+    new Button(m_driverController, CommandXboxController.Button.kStart.value)
+        .onTrue(new InstantCommand(
+            () -> m_robotDrive.zeroHeading(),
+            m_robotDrive));
+            **/
+            
 // WILL BE FOR THE ARM @TODO 
   //Left Trigger -> arm moves up
   //idy is isdoneyet
@@ -128,22 +156,24 @@ public class RobotContainer {
 **/
 
     // While the left bumper on operator controller is held, intake Fuel
-  m_driverController.leftBumper().whileTrue(new Intake(fuelSubsystem));
+  m_driverController.leftBumper().whileTrue(ballSubsystem.runEnd(() -> ballSubsystem.intake(), () -> ballSubsystem.stop()));
 
-    // While the right bumper on the operator controller is held, spin up for 1
-      m_driverController.rightBumper().onTrue(new LaunchSequence(fuelSubsystem));
+    // While the a  on the operator controller is held, spin up for 1
+     // m_driverController.a().onTrue(new LaunchSequence(fuelSubsystem));
 
- // While the A button is held on the operator controller, eject fuel back out
+ // While the right button is held on the operator controller, eject fuel back out
     // the intake
-     m_driverController.a().whileTrue(new Eject(fuelSubsystem));
+     m_driverController.rightBumper().whileTrue(ballSubsystem.spinUpCommand().withTimeout(FuelConstants.SPIN_UP_SECONDS)
+            .andThen(ballSubsystem.launchCommand())
+            .finallyDo(() -> ballSubsystem.stop()));
 
     // Right Trigger -> Run coral intake, set to leave out when idle
-    m_driverController
-        .rightTrigger()
-        .onTrue(new LaunchSequence(fuelSubsystem));;
+    m_driverController.rightTrigger().whileTrue(ballSubsystem.runEnd(() -> ballSubsystem.eject(), () -> ballSubsystem.stop()));
 
     // Start Button -> Zero swerve heading
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
+
+    
    // Create a POV trigger for your controller
     //povTrigger = new Trigger(() -> m_driverController.getPOV() != -1);
     //new POVMotorCommand(m_armSubsystem, m_driverController, povTrigger);

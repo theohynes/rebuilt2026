@@ -61,7 +61,7 @@ public class DriveSubsystem extends SubsystemBase {
 private Field2d _field = new Field2d();
 
   // The gyro sensor
-  private final Pigeon2 m_gyro = new Pigeon2(0);
+  private final Pigeon2 m_gyro = new Pigeon2(50);
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -205,6 +205,6 @@ private Field2d _field = new Field2d();
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getAngularVelocityXWorld().getValueAsDouble() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getAngularVelocityZDevice().getValueAsDouble() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 }

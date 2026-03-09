@@ -46,15 +46,15 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 11;
+    public static final int kFrontLeftDrivingCanId = 15;
     public static final int kRearLeftDrivingCanId = 13;
-    public static final int kFrontRightDrivingCanId = 15;
+    public static final int kFrontRightDrivingCanId = 11;
     public static final int kRearRightDrivingCanId = 17;
 
-    public static final int kFrontLeftTurningCanId = 10;
-    public static final int kRearLeftTurningCanId = 12;
-    public static final int kFrontRightTurningCanId = 14;
-    public static final int kRearRightTurningCanId = 16;
+    public static final int kFrontLeftTurningCanId = 14;
+    public static final int kRearLeftTurningCanId = 16;
+    public static final int kFrontRightTurningCanId = 10;
+    public static final int kRearRightTurningCanId = 12;
 
     public static final boolean kGyroReversed = false;
   }
@@ -98,10 +98,7 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
-  public static final class NeoMotorConstants {
-    //OG SPEED=public static final double kFreeSpeedRpm = 5676;
-    public static final double kFreeSpeedRpm = 6784;
-  }
+ 
 
   public static final class FuelConstants {
     // Motor controller IDs for Fuel Mechanism motors
@@ -121,6 +118,8 @@ public final class Constants {
     public static final double LAUNCHING_LAUNCHER_VOLTAGE = 10.6;
     public static final double SPIN_UP_FEEDER_VOLTAGE = -6;
     public static final double SPIN_UP_SECONDS = 1;
+
+  
   }
 
     public static final class OperatorConstants {
@@ -140,4 +139,9 @@ public final class Constants {
       //public static final boolean ARM_MOTOR_INVERTED = false;
       //public static final int ARM_MOTOR_CAN_ID = 31;
 
+
+ public static final class NeoMotorConstants {
+    public static final double kFreeSpeedRpm = 5676;
+    //public static final double kFreeSpeedRpm = 6784;
+  }
 }
