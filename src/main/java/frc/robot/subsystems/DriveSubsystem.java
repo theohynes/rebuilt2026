@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.utils.MAXSwerveModule;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -85,20 +86,20 @@ private Field2d _field = new Field2d();
     // Update the odometry in the periodic block
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
-        new SwerveModulePosition[] {
+         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
-  }
+      }
 
   /**
    * Returns the currently-estimated pose of the robot.
    *
    * @return The pose.
    */
-  public Pose2d getPose() {
+   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
 
@@ -109,7 +110,7 @@ private Field2d _field = new Field2d();
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
+        Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()/*m_Pigeon2.getYaw().getValueAsDouble()*/),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -118,6 +119,7 @@ private Field2d _field = new Field2d();
         },
         pose);
   }
+
   /** Zeroes the heading of the robot. */
   public Command zeroHeadingCommand() {
     return this.runOnce(() -> m_gyro.reset());
@@ -131,7 +133,7 @@ private Field2d _field = new Field2d();
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;

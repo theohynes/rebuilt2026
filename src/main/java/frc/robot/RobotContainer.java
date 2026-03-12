@@ -154,22 +154,21 @@ public class RobotContainer {
   m_driverController.leftTrigger(OIConstants.kTriggerButtonThreshold)
   .whileTrue(new extendArmToBar(m_armSubsystem, 5, 0.5, false));
 **/
-
-    // While the left bumper on operator controller is held, intake Fuel
-  m_driverController.leftBumper().whileTrue(ballSubsystem.runEnd(() -> ballSubsystem.intake(), () -> ballSubsystem.stop()));
-
-    // While the a  on the operator controller is held, spin up for 1
-     // m_driverController.a().onTrue(new LaunchSequence(fuelSubsystem));
-
- // While the right button is held on the operator controller, eject fuel back out
-    // the intake
-     m_driverController.rightBumper().whileTrue(ballSubsystem.spinUpCommand().withTimeout(FuelConstants.SPIN_UP_SECONDS)
+      // While the left bumper on operator controller is held, intake Fuel
+    m_driverController.leftBumper()
+        .whileTrue(ballSubsystem.runEnd(() -> ballSubsystem.intake(), () -> ballSubsystem.stop()));
+    // While the right bumper on the operator controller is held, spin up for 1
+    // second, then launch fuel. When the button is released, stop.
+    m_driverController.rightBumper()
+        .whileTrue(ballSubsystem.spinUpCommand().withTimeout(FuelConstants.SPIN_UP_SECONDS)
             .andThen(ballSubsystem.launchCommand())
             .finallyDo(() -> ballSubsystem.stop()));
-
-    // Right Trigger -> Run coral intake, set to leave out when idle
-    m_driverController.rightTrigger().whileTrue(ballSubsystem.runEnd(() -> ballSubsystem.eject(), () -> ballSubsystem.stop()));
-
+    // While the A button is held on the operator controller, eject fuel back out
+    // the intake
+    m_driverController.a()
+.whileTrue(ballSubsystem.spinUpCommand().withTimeout(FuelConstants.SPIN_UP_SECONDS)
+            .andThen(ballSubsystem.yeetTheBallCommand())
+            .finallyDo(() -> ballSubsystem.stop()));
     // Start Button -> Zero swerve heading
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
 

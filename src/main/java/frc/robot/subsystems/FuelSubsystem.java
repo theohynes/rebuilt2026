@@ -15,7 +15,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.FuelConstants.*;
 
+
 public class FuelSubsystem extends SubsystemBase {
+    @SuppressWarnings("is never used")
+
   private final SparkMax feederRoller;
   private final SparkMax intakeLauncherRoller;
 
@@ -46,7 +49,7 @@ public class FuelSubsystem extends SubsystemBase {
     // the motor to inverted so that positive values are used for both intaking and
     // launching, and apply the config to the controller
     SparkMaxConfig launcherConfig = new SparkMaxConfig();
-    launcherConfig.inverted(true);
+    launcherConfig.inverted(false);
     launcherConfig.smartCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
     intakeLauncherRoller.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     launcherConfig.voltageCompensation(11.0); // This tells the motor controller that "100% power" equals 11 Volts.
@@ -61,18 +64,32 @@ public class FuelSubsystem extends SubsystemBase {
 
   // A method to set the rollers to values for ejecting fuel out the intake. Uses
   // the same values as intaking, but in the opposite direction.
-  public void eject() {
+  public void yeetEject() {
     feederRoller
         .setVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
     intakeLauncherRoller
-        .setVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", INTAKING_INTAKE_VOLTAGE));
+        .setVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", -INTAKING_INTAKE_VOLTAGE));
   }
-
-  // A method to set the rollers to values for launching.
-  public void launch() {
-    feederRoller.setVoltage(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE));
+    // A method to set the rollers to values for launching.
+  public void yeetLaunch() {
+    feederRoller.setVoltage(SmartDashboard.getNumber("Launching feeder roller value", -LAUNCHING_FEEDER_VOLTAGE));
     intakeLauncherRoller
         .setVoltage(SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE));
+  }
+  //------------------------------------------------------------------------------------------------------------
+// A method to set the rollers to values for ejecting fuel out the intake. Uses
+  // the same values as intaking, but in the opposite direction.
+  public void normalEject() {
+    feederRoller
+        .setVoltage(-.95 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
+    intakeLauncherRoller
+        .setVoltage(-.95 * SmartDashboard.getNumber("Intaking launcher roller value", -INTAKING_INTAKE_VOLTAGE));
+  }
+  // A method to set the rollers to values for launching.
+  public void normalLaunch() {
+    feederRoller.setVoltage(SmartDashboard.getNumber("Launching feeder roller value", -LAUNCHING_FEEDER_VOLTAGE*.95));
+    intakeLauncherRoller
+        .setVoltage(SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE*.95));
   }
 
   // A method to stop the rollers
@@ -99,11 +116,19 @@ public class FuelSubsystem extends SubsystemBase {
   // A command factory to turn the launch method into a command that requires this
   // subsystem
   public Command launchCommand() {
-    return this.run(() -> launch());
+    return this.run(() -> normalLaunch());
   }
+public Command yeetTheBallCommand(){
+  return this.run(()-> yeetLaunch());
+}
+//------------------------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------------------------
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
   }
 }
