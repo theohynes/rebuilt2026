@@ -49,7 +49,7 @@ public class FuelSubsystem extends SubsystemBase {
     // the motor to inverted so that positive values are used for both intaking and
     // launching, and apply the config to the controller
     SparkMaxConfig launcherConfig = new SparkMaxConfig();
-    launcherConfig.inverted(false);
+    launcherConfig.inverted(true);
     launcherConfig.smartCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
     intakeLauncherRoller.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     launcherConfig.voltageCompensation(11.0); // This tells the motor controller that "100% power" equals 11 Volts.
@@ -68,7 +68,7 @@ public class FuelSubsystem extends SubsystemBase {
     feederRoller
         .setVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
     intakeLauncherRoller
-        .setVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", -INTAKING_INTAKE_VOLTAGE));
+        .setVoltage(-1 * SmartDashboard.getNumber("Intaking launcher roller value", INTAKING_INTAKE_VOLTAGE));
   }
     // A method to set the rollers to values for launching.
   public void yeetLaunch() {

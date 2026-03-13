@@ -122,7 +122,7 @@ public class RobotContainer {
                         m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                     -MathUtil.applyDeadband(
                         m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                    true),
+                    false),
             m_robotDrive));
   }
 
@@ -166,9 +166,8 @@ public class RobotContainer {
     // While the A button is held on the operator controller, eject fuel back out
     // the intake
     m_driverController.a()
-.whileTrue(ballSubsystem.spinUpCommand().withTimeout(FuelConstants.SPIN_UP_SECONDS)
-            .andThen(ballSubsystem.yeetTheBallCommand())
-            .finallyDo(() -> ballSubsystem.stop()));
+        .whileTrue(ballSubsystem.runEnd(() -> ballSubsystem.yeetEject(), () -> ballSubsystem.stop()));
+
     // Start Button -> Zero swerve heading
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
 
