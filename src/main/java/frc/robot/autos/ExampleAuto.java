@@ -5,9 +5,14 @@
 package frc.robot.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.FuelConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.commands.Launch;
 import frc.robot.subsystems.FuelSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Commands;
+
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -24,6 +29,8 @@ public class ExampleAuto extends SequentialCommandGroup {
     new AutoDrive(driveSubsystem1,0.5,  0.0).withTimeout(.25),
     // Spin up the launcher for 1 second and then launch balls for 9 seconds, for a
     // total of 10 seconds
-    new Launch(ballSubsystem).withTimeout(10));
-  }
+ballSubsystem.spinUpCommand().withTimeout(FuelConstants.SPIN_UP_SECONDS)
+            .andThen(ballSubsystem.launchCommand())
+            .finallyDo(() -> ballSubsystem.stop()));
+            }
 }
