@@ -10,7 +10,8 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FuelConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.autos.AutoDrive;
-import frc.robot.autos.ExampleAuto;
+import frc.robot.autos.drive_and_shoot_bump_QSec;
+import frc.robot.autos.drive_and_shoot_forward_halfSec;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 /** 
@@ -116,8 +117,13 @@ public class RobotContainer {
         // Set the options to show up in the Dashboard for selecting auto modes. If you
     // add additional auto modes you can add additional lines here with
     // autoChooser.addOption
-    autoChooser.setDefaultOption("Autonomous_DRIVE", new AutoDrive(m_robotDrive,0.5,  0.0).withTimeout(.25));
-    autoChooser.addOption("Autonomous_DRIVE_SHOOT", new ExampleAuto(m_robotDrive, ballSubsystem));
+
+    
+    
+    autoChooser.setDefaultOption("Autonomous_DRIVE_SHOOT", new drive_and_shoot_forward_halfSec(m_robotDrive, ballSubsystem));
+    autoChooser.addOption("Autonomous_DRIVE_SHOOT", new drive_and_shoot_bump_QSec(m_robotDrive, ballSubsystem));
+   
+    autoChooser.addOption("Autonomous_DRIVE", new AutoDrive(m_robotDrive,0.5,  0.0).withTimeout(.25));
 
     // Configure the button bindings
     configureButtonBindings();
