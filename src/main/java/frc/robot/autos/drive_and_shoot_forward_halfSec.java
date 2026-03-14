@@ -18,10 +18,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class drive_and_shoot_forward_halfSec extends SequentialCommandGroup {
-  /** Creates a new ExampleAuto. */
+
   public drive_and_shoot_forward_halfSec(DriveSubsystem driveSubsystem1, FuelSubsystem ballSubsystem) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+   
     addCommands(
     // Drive backwards for .25 seconds. The driveArcadeAuto command factory
     // intentionally creates a command which does not end which allows us to control
