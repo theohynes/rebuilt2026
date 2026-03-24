@@ -14,6 +14,7 @@ import frc.robot.autos.drive_and_shoot_bump_QSec;
 import frc.robot.autos.drive_and_shoot_forward_halfSec;
 import frc.robot.subsystems.FuelSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.autos.WayneState_Finals_auto;
 /** 
 import frc.robot.commands.pause;
 import frc.robot.commands.SpinUp;
@@ -119,7 +120,8 @@ public class RobotContainer {
     // autoChooser.addOption
 
     
-    
+    autoChooser.addOption("WAYNE STATE FINALS", new WayneState_Finals_auto(m_robotDrive, ballSubsystem));
+
     autoChooser.setDefaultOption("Autonomous_DRIVE_SHOOT", new drive_and_shoot_forward_halfSec(m_robotDrive, ballSubsystem));
     autoChooser.addOption("Autonomous_DRIVE_SHOOT", new drive_and_shoot_bump_QSec(m_robotDrive, ballSubsystem));
    

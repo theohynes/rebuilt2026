@@ -27,7 +27,7 @@ public class drive_and_shoot_bump_QSec extends SequentialCommandGroup {
     new AutoDrive(driveSubsystem1,0.5,  0.0).withTimeout(.25),
     // Spin up the launcher for 1 second and then launch balls for 9 seconds, for a
     // total of 10 seconds
-ballSubsystem.spinUpCommand().withTimeout(FuelConstants.SPIN_UP_SECONDS)
+ballSubsystem.spinUpCommand()
             .andThen(ballSubsystem.launchCommand())
             .finallyDo(() -> ballSubsystem.stop()));
             }

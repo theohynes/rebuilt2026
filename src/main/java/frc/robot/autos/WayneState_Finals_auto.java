@@ -17,15 +17,17 @@ import edu.wpi.first.wpilibj2.command.Commands;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class drive_and_shoot_forward_halfSec extends SequentialCommandGroup {
+public class WayneState_Finals_auto extends SequentialCommandGroup {
 
-  public drive_and_shoot_forward_halfSec(DriveSubsystem driveSubsystem1, FuelSubsystem ballSubsystem) {
+  public WayneState_Finals_auto(DriveSubsystem driveSubsystem1, FuelSubsystem ballSubsystem) {
    
     addCommands(
+        ballSubsystem.spinUpCommand().withTimeout(FuelConstants.SPIN_UP_SECONDS),
+
     // Drive backwards for .25 seconds. The driveArcadeAuto command factory
     // intentionally creates a command which does not end which allows us to control
     // the timing using the withTimeout decorator
-    new AutoDrive(driveSubsystem1,0.7,  0.0).withTimeout(.5),
+    new AutoDrive(driveSubsystem1,-.9,  0.0).withTimeout(.5),
     // Spin up the launcher for 1 second and then launch balls for 9 seconds, for a
     // total of 10 seconds
 ballSubsystem.spinUpCommand()
