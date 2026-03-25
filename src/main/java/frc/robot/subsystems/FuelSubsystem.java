@@ -31,6 +31,8 @@ public class FuelSubsystem extends SubsystemBase {
 
   private final SparkMax feederRoller;
   private final SparkMax intakeLauncherRoller;
+    private final SparkClosedLoopController launcherPID;
+  private final RelativeEncoder launcherEncoder;
 
   /** Creates a new CANBallSubsystem. */
   @SuppressWarnings("removal")
@@ -42,7 +44,8 @@ public class FuelSubsystem extends SubsystemBase {
 
     intakeLauncherRoller = new SparkMax(INTAKE_LAUNCHER_MOTOR_ID, MotorType.kBrushless);
     feederRoller = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushless);
-
+    launcherPID = intakeLauncherRoller.getClosedLoopController();
+    launcherEncoder = intakeLauncherRoller.getEncoder();
     // put default values for various fuel operations onto the dashboard
     // all methods in this subsystem pull their values from the dashbaord to allow
     // you to tune the values easily, and then replace the values in Constants.java
@@ -52,24 +55,34 @@ public class FuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE);
     SmartDashboard.putNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE);
     SmartDashboard.putNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VOLTAGE);
+  SmartDashboard.putNumber("Launcher Target RPM", 3500); // Start safe for PLA+
+    SmartDashboard.putNumber("Launching feeder voltage", LAUNCHING_FEEDER_VOLTAGE);
 
-    // create the configuration for the feeder roller, set a current limit and apply
-    // the config to the controller
+   // --- FEEDER CONFIG ---
     SparkMaxConfig feederConfig = new SparkMaxConfig();
-    feederConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(50);
-    feederConfig.inverted(false);
-    feederConfig.smartCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
+    feederConfig.idleMode(IdleMode.kBrake);
+    feederConfig.smartCurrentLimit(30); // Lower limit to prevent heat buildup
+    feederConfig.inverted(true); 
     feederRoller.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    // create the configuration for the launcher roller, set a current limit, set
-    // the motor to inverted so that positive values are used for both intaking and
-    // launching, and apply the config to the controller
+    // --- LAUNCHER CONFIG (The Gear Protector) ---
     SparkMaxConfig launcherConfig = new SparkMaxConfig();
-    launcherConfig.inverted(false);//originally true for cim
-    launcherConfig.smartCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
-    launcherConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(50);
+    launcherConfig.inverted(false);
+    launcherConfig.idleMode(IdleMode.kCoast);
+    launcherConfig.smartCurrentLimit(50);
+    launcherConfig.voltageCompensation(12.0);
+    
+    // RAMP RATE: This prevents the "screaming" sudden start
+    launcherConfig.closedLoopRampRate(0.5); 
+    launcherConfig.openLoopRampRate(0.5);
+
+    // PID Constants for Velocity
+    launcherConfig.closedLoop.p(0.0001);
+    launcherConfig.closedLoop.i(0);
+    launcherConfig.closedLoop.d(0);
+    launcherConfig.closedLoop.velocityFF(0.000175); // Adjust based on your gear ratio
+
     intakeLauncherRoller.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    launcherConfig.voltageCompensation(11.0); // This tells the motor controller that "100% power" equals 11 Volts.
   }
 
   // A method to set the rollers to values for intaking
@@ -104,18 +117,26 @@ feederRoller.setVoltage(SmartDashboard.getNumber("Intaking feeder roller value",
             feederRoller.setInverted(true);
 
     feederRoller
-        .setVoltage(.95 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
+        .setVoltage(.85 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
     intakeLauncherRoller
-        .setVoltage(-.95 * SmartDashboard.getNumber("Intaking launcher roller value", -INTAKING_INTAKE_VOLTAGE));
+        .setVoltage(-.85 * SmartDashboard.getNumber("Intaking launcher roller value", -INTAKING_INTAKE_VOLTAGE));
   }
   // A method to set the rollers to values for launching.
   public void normalLaunch() {
-    feederRoller.setInverted(true);
+    double targetRPM = SmartDashboard.getNumber("Launcher Target RPM", 3500);
+    double feederVolts = SmartDashboard.getNumber("Launching feeder voltage", LAUNCHING_FEEDER_VOLTAGE);
 
-    feederRoller.setVoltage(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE*.95));
-    intakeLauncherRoller
-        .setVoltage(SmartDashboard.getNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE*.95));
-  }
+    // Use PID to maintain steady RPM
+    launcherPID.setReference(targetRPM, ControlType.kVelocity);
+
+    // Check if we are within 150 RPM of target before feeding
+    if (Math.abs(launcherEncoder.getVelocity() - targetRPM) < 150) {
+        feederRoller.setVoltage(feederVolts);
+    } else {
+        feederRoller.setVoltage(0);
+    }
+
+}
 
   // A method to stop the rollers
   public void stop() {
@@ -154,6 +175,8 @@ public Command yeetTheBallCommand(){
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+ // Keep an eye on the actual RPM vs Target on the Dashboard
+    SmartDashboard.putNumber("Actual Launcher RPM", launcherEncoder.getVelocity());
+ 
   }
 }
